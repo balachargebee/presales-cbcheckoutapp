@@ -1,0 +1,41 @@
+body{
+  margin: 0;
+}
+main {
+  background-color: #d7e3fa;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  width: 400px;
+  height: 270px;
+  background-color: #ffffff;
+  padding: 35px;
+  border-radius: 25px;
+  text-align: center;
+ 
+}
+
+
+
+h1 {
+  color: #1b212c;
+  font-size: 32px;
+  font-family: "Raleway", sans-serif;
+  margin-bottom: 0;
+}
+
+
+h2 {
+  color: #5e636b;
+  font-size: 20px;
+  font-family: "Raleway", sans-serif; 
+}
+
+h2:hover {
+  font-size: 150%;
+  cursor: pointer;
+}

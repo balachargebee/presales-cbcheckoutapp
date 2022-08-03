@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- adding the needed styling -->
+  <title>Checkout Demo</title>
+  <link href="/assets/css/style.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://js.chargebee.com/v2/chargebee.js"></script>
+
+</head>
+
+<script> 
+  $(document).ready(function() {
+    var cbInstance = window.Chargebee.init({site: "renesf-test"});
+    var url = window.location.href
+    var arr = url.split("/");
+    var domain = arr[0] + "//" + arr[2];
+    
+    $("#cva").on("click", function(event) {
+      
+            window.location.replace(domain + "/index1.html");
+          }
+    );
+    $("#dis").on("click", function(event) {
+      
+      window.location.replace(domain + "/index2.html");
+    }
+);
+$("#hc").on("click", function(event) {
+      
+      window.location.replace(domain + "/index3.html");
+    }
+);
+$("#cbjs").on("click", function(event) {
+      
+      window.location.replace(domain + "/index4.html");
+    }
+);
+        });
+  </script>
+
+
+<body>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
+
+<main>
+<section class="card">
+<h1>Checkout Demo</h1>
+
+  <h2 id="dis">Drop-in Script</h2>
+  <h2 id="cva">Checkout via API</h2>
+  <h2 id="hc">Hybrid Checkout</h2>
+  <h2 id="cbjs">Chargebee.js</h2>
+  </section>
+
+</body>
+</html>
