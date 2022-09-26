@@ -1,0 +1,250 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- adding the needed styling -->
+    <title>Checkout via API</title>
+    <link href="/assets/css/latest.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://js.chargebee.com/v2/chargebee.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DVCKDD3NBJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DVCKDD3NBJ');
+</script>
+</head>
+<script> 
+var hpid;
+var planid;
+$(document).ready(function() {
+  var cbInstance = window.Chargebee.init({site: "checkoutexamples-test"});
+  var url = window.location.href
+  var arr = url.split("/");
+  var domain = arr[0] + "//" + arr[2];
+
+  $("#subscribe-form1").on("click", function(event) {
+
+    planid = "Rise-EUR-Monthly";
+    console.log(event);
+    event.preventDefault();
+    $("#loader").show();
+    $("#errorContainer").hide();
+    cbInstance.openCheckout({
+        hostedPage: function() {
+          return $.ajax({
+            method: "post",
+            url: domain + "/api/generate_checkout_new_url",
+    data: {"planid": planid}
+          });
+        },
+        loaded: function() {
+          console.log("checkout opened");
+        },
+        error: function() {
+          $("#loader").hide();
+          $("#errorContainer").show();
+        },
+        
+        success: function(hostedPageId) {
+          console.log(hostedPageId);
+          hpid = hostedPageId;
+        },
+        close: function() {
+          $("#loader").hide();
+          $("#errorContainer").hide();
+          console.log("checkout closed");
+          if (hpid) { 
+          window.location.replace(domain + "/dashboard.html");
+        }
+        },
+        step: function(value) {
+            // value -> which step in checkout
+            console.log(value);
+        }
+      });
+  });
+
+  $("#subscribe-form2").on("click", function(event) {
+    planid = "Scale-EUR-Monthly";
+    console.log(event);
+    event.preventDefault();
+    $("#loader").show();
+    $("#errorContainer").hide();
+    cbInstance.openCheckout({
+        hostedPage: function() {
+          return $.ajax({
+            method: "post",
+            url: domain + "/api/generate_checkout_new_url",
+            data: {"planid": planid}
+          });
+        },
+        loaded: function() {
+          console.log("checkout opened");
+        },
+        error: function() {
+          $("#loader").hide();
+          $("#errorContainer").show();
+        },
+        
+        success: function(hostedPageId) {
+          console.log(hostedPageId);
+          hpid = hostedPageId;
+        },
+        close: function() {
+          $("#loader").hide();
+          $("#errorContainer").hide();
+          console.log("checkout closed");
+          if (hpid) { 
+          window.location.replace(domain + "/dashboard.html");
+        }
+        },
+        step: function(value) {
+            // value -> which step in checkout
+            console.log(value);
+        }
+      });
+  });
+
+
+  /*$(".w3-bar-block").click(function(event){
+  if(event.target.id == 'upgrade'){	
+  console.log('value');
+    event.preventDefault();
+    cbInstance.setPortalSession(function(){
+      // We will discuss on how to implement this end point below.
+      console.log('value');
+      return $.ajax({
+        url: "http://localhost:8000/api/generate_checkout_existing_url",
+        method: 'POST',
+        data: data
+      });
+    });
+    let cbPortal = cbInstance.createChargebeePortal();
+    cbPortal.open({
+      close() {
+        //close callbacks
+      }
+    });
+  }
+
+  });
+
+  $("#upgrade").on("click", function(event) {
+
+console.log(event);
+
+    
+
+
+  
+
+    });*/
+
+    $("#upgrade").on("click", function() {
+      event.preventDefault();
+      cbInstance.setPortalSession({
+        hostedPage: function() {
+          // Hit your end point that returns hosted page object as response
+          // This sample end point will call the below api
+          // You can pass hosted page object created as a result of checkout_new, checkout_existing, manage_payment_sources
+          // https://apidocs.chargebee.com/docs/api/hosted_pages#checkout_new_subscription
+          // https://apidocs.chargebee.com/docs/api/hosted_pages#checkout_existing_subscription
+          // https://apidocs.chargebee.com/docs/api/hosted_pages#manage_payment_sources
+          // If you want to use paypal, go cardless and plaid, pass embed parameter as false
+          return $.ajax({
+            method: "post",
+            url: "http://localhost:8000/api/generate_checkout_existing_url"
+          });
+        },
+        loaded: function() {
+          console.log("checkout opened");
+        },
+        error: function() {
+        },
+        close: function() {
+          console.log("checkout closed");
+        },
+        success: function(hostedPageId) {
+          console.log(hostedPageId);
+          // Hosted page id will be unique token for the checkout that happened
+          // You can pass this hosted page id to your backend 
+          // and then call our retrieve hosted page api to get subscription details
+          // https://apidocs.chargebee.com/docs/api/hosted_pages#retrieve_a_hosted_page
+        },
+        step: function(value) {
+            // value -> which step in checkout
+            console.log(value);
+        }
+      });
+  
+      let cbPortal = cbInstance.createChargebeePortal();
+      cbPortal.open({
+          close() {
+              
+          }
+      })
+  
+    });
+    
+      
+      
+     
+      
+   } );
+  
+</script>
+
+
+<div class="background">
+  <div class="container">
+    <div class="panel pricing-table">
+      <div class="pricing-plan">
+        <img src="https://s22.postimg.cc/8mv5gn7w1/paper-plane.png" alt="" class="pricing-img">
+        <h2 class="pricing-header">Rise</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Billing</li>
+          <li class="pricing-features-item">Smart Dunning</li>
+          <li class="pricing-features-item">2 Team Members</li>
+          <li class="pricing-features-item">Email Support</li>
+        </ul>
+        <span class="pricing-price">€299/mo</span>
+         <a href="javascript:void(0)" class="pricing-button is-featured" value="subscribe-form1" id="subscribe-form1">Subscribe</a>
+      </div>
+      
+      <div class="pricing-plan">
+        <img src="https://s28.postimg.cc/ju5bnc3x9/plane.png" alt="" class="pricing-img">
+        <h2 class="pricing-header">Scale</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Invoicing</li>
+          <li class="pricing-features-item">Contact Terms</li>
+          <li class="pricing-features-item">Unlimited Users</li>
+          <li class="pricing-features-item">Chat Support</li>
+        </ul>
+        <span class="pricing-price">€599/mo</span>
+        <a href="javascript:void(0)" class="pricing-button is-featured" value="subscribe-form2" id="subscribe-form2">Subscribe</a>
+   
+      </div>
+      
+      <div class="pricing-plan">
+        <img src="https://s21.postimg.cc/tpm0cge4n/space-ship.png" alt="" class="pricing-img">
+        <h2 class="pricing-header">Enterprise</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Reports</li>
+          <li class="pricing-features-item">Implementation</li>
+          <li class="pricing-features-item">SAML SSO</li>
+          <li class="pricing-features-item">Premium Support</li>
+        </ul>
+        <span class="pricing-price">Custom</span>
+        <a href="#/" class="pricing-button is-featured">Talk to Us</a>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+</html>

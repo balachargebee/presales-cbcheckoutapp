@@ -1,0 +1,992 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout by ChargebeeJS </title>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"
+    integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+    <script src="https://js.chargebee.com/v2/chargebee.js"></script>
+    
+</head>
+<script>
+    window.addEventListener('DOMContentLoaded', function (event) {                     
+
+        var cbInstance = Chargebee.init({
+            site: "checkoutexamples-test",
+            domain: "https://checkoutexamples-test.chargebee.com",
+            publishableKey: "test_S3m3YGlRntq88LHcsfqJYvcdzW2zYgnDC"
+        });
+
+        var options = {
+            fonts: ['https://fonts.googleapis.com/css?family=Roboto:300,500,600'],
+
+            // add classes for different states
+            classes: {
+                focus: 'focus',
+                invalid: 'invalid',
+                empty: 'empty',
+                complete: 'complete',
+            },
+
+            // add placeholders
+            placeholder: {
+                number: '4111 1111 1111 1111'
+            },
+
+            // Set locale
+            locale: 'en',
+
+            style: {
+
+                // Styles for default state
+                base: {
+                    color: '#333',
+                    fontWeight: '500',
+                    fontFamily: 'Roboto, Segoe UI, Helvetica Neue, sans-serif',
+                    fontSize: '16px',
+                    fontSmoothing: 'antialiased',
+
+                    ':focus': {
+                    // color: '#424770',
+                    },
+
+                    '::placeholder': {
+                        color: 'transparent',
+                    },
+
+                    ':focus::placeholder': {
+                        color: '#7a7a87',
+                    },
+                },
+
+                // Styles for invalid state
+                invalid: {
+                    color: '#E94745',
+
+                    ':focus': {
+                        color: '#e44d5f',
+                    },
+                    '::placeholder': {
+                        color: '#FFCCA5',
+                    },
+                },
+            },
+        }
+
+        cbInstance.load("components").then(() => {
+
+            // Create card
+            var cardComponent = cbInstance.createComponent("card", options);
+            // Create card fields
+            cardComponent.createField("number").at("#card-number");
+            cardComponent.createField("expiry").at("#card-expiry");
+            cardComponent.createField("cvv").at("#card-cvv");
+
+            // Mount card component
+            cardComponent.mount();
+
+            $("#payment").on("submit", function (event) {
+                console.log("pass");
+                var cbInstance = window.Chargebee.init({site: "checkoutexamples-test"});
+        var url = window.location.href;
+        var arr = url.split("/");
+        var domain = arr[0] + "//" + arr[2];
+                var cbInstance = window.Chargebee.init({site: "checkoutexamples-test"});     
+                // inputValidation();                                                   
+                $("#submit-button").addClass("submit");
+                event.preventDefault();
+                cardComponent.tokenize().then(data => {
+                    $("#submit-button").removeClass("submit");
+                    $("#token").show();
+                    $("#error").hide();                    
+                    $("#token").html("Token " + data.token + " Subscription created!!");
+        var email = $("#email").val();
+        var firstName = $("#firstName").val();
+        var lastName = $("#lastName").val();
+        var company = $("#company").text();
+        var plan = $("#cc-cart-plan-name").text();      
+        console.log(plan);
+        var quantity = $('.cc-addon__qty').text();
+        var token = data.token;                
+        
+                    $.ajax({
+                        type: "POST",
+                        url: domain + "/api/create_customers",
+                        dataType: 'json',
+          data: {"customer_name": firstName, "email": email, "token":token, "lastName" : lastName, "company":company, "quantity":quantity, "plan":plan},      
+                       
+                        success: function(data)
+                        {
+                            console.log("success");
+                        }
+                    });
+
+
+                }).catch(error => {
+                    $("#submit-button").removeClass("submit");
+                    // TODO get a proper error message
+                    $("#error").show();
+                    $("#error").html("Problem while tokenizing your card details");
+                    $("#token").hide();
+                    console.log(error);
+                });    
+             //   window.location.replace("https://www.test.com/login");                           
+            });
+
+        });
+    })
+    
+</script>
+<body>
+    <div class="cc-wrapper">
+        <div class="cc-header" style="padding: 16px;">
+            <div class="cc-header__brand"><h2>Checkout by chargebee.js</h2></div>
+        </div>
+        <div class="cc-content">
+            <form id="payment" method="post">
+                <div class="cc-container">
+                    <div class="cc-main">
+                        <!-- components start -->
+                        <!-- currency selector-->
+                       <!-- <div class="cc-section">
+                            <div class="cc-section__header">
+                                <div class="cc-section__number">1</div>
+                                <div class="cc-section__title">Choose your currency</div>
+                            </div>
+                            <div class="cc-section__content">
+                                <div class="cc-currencies">                                                                                                       
+                                    <label class="cc-currency">
+                                        <input type="radio" class="cc-plan__input" name="currency_id" value=usd>
+                                        <div class="cc-plan__container">
+                                            <div class="cc-plan__icon"></div>
+                                            <div class="cc-plan__main">
+                                                <div class="cc-plan__name">USD</div>                                                                                            
+                                            </div>                                           
+                                        </div>
+                                    </label>
+                                    <label class="cc-currency">
+                                        <input type="radio" class="cc-plan__input" name="currency_id" value=eur>
+                                        <div class="cc-plan__container">
+                                            <div class="cc-plan__icon"></div>
+                                            <div class="cc-plan__main">
+                                                <div class="cc-plan__name">EUR</div>                                                                                           
+                                            </div>                                          
+                                        </div>
+                                    </label>          
+                                </div>
+                            </div>                                                                                                                               
+                                                          
+                        </div>       -->
+
+                        <!-- plan selector-->
+                        <div class="cc-section">
+                            <div class="cc-section__header">
+                                <div class="cc-section__number">1</div>
+                                <div class="cc-section__title">Choose your plan</div>
+                            </div>
+                            <div class="cc-section__content">
+                                <div class="cc-plans">                                                                                                       
+                                    <label class="cc-plan">
+                                        <input type="radio" class="cc-plan__input" name="plan_id" value=plan-a>
+                                        <div class="cc-plan__container">
+                                            <div class="cc-plan__icon"></div>
+                                            <div class="cc-plan__main">
+                                                <div class="cc-plan__name">Lite</div>
+                                                <div class="cc-plan__caption">Custom Reporting, Contact Enrichment
+                                                </div>                                               
+                                            </div>
+                                            <div class="cc-plan__aside">
+                                                <div class="cc-plan__value">
+                                                    $<span class="cc-plan__price">27.50</span><small>/mo</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label class="cc-plan">
+                                        <input type="radio" class="cc-plan__input" name="plan_id" value=plan-a>
+                                        <div class="cc-plan__container">
+                                            <div class="cc-plan__icon"></div>
+                                            <div class="cc-plan__main">
+                                                <div class="cc-plan__name">Grow</div>
+                                                <div class="cc-plan__caption">Email Notifications, Custom Domain
+                                                </div>                                               
+                                            </div>
+                                            <div class="cc-plan__aside">
+                                                <div class="cc-plan__value">
+                                                    $<span class="cc-plan__price">62.50</span><small>/mo</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label class="cc-plan">
+                                        <input type="radio" class="cc-plan__input" name="plan_id" value=plan-a>
+                                        <div class="cc-plan__container">
+                                            <div class="cc-plan__icon"></div>
+                                            <div class="cc-plan__main">
+                                                <div class="cc-plan__name">Professional</div>
+                                                <div class="cc-plan__caption">Contract Setup, Smart Dunning
+                                                </div>                                               
+                                            </div>
+                                            <div class="cc-plan__aside">
+                                                <div class="cc-plan__value">
+                                                    $<span class="cc-plan__price">79.50</span><small>/mo</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                        </div>                        
+
+                        <div class="cc-section">
+                            <div class="cc-section__header">
+                                <div class="cc-section__number">2</div>
+                                <div class="cc-section__title">Personalize your plan</div>
+                            </div>
+                            <div class="cc-section__content">
+                                
+                                <div class="cc-section__block">
+                                    <div class="cc-section__heading">How many contacts do you have?</div>
+                                    <div class="cc-section__caption">Consider how many clients you have, as well as how many leads you add each month.</div>
+                                    <div class="cc-addon">
+                                        <div class="cc-addon__container">
+                                            <div class="cc-addon__main">
+                                                <div class="cc-addon__row">
+                                                    <div class="cc-addon__counter">
+                                                        <div class="cc-addon__counter-decrement">-</div>
+                                                        <div class="cc-addon__counter-increment">+</div>
+                                                        <input class="cc-addon__counter-input" type="number" step="2500" value="2500" min="2500" max="5000">                                                                                                           
+                                                        <input type="hidden" data-price="true" value=79.50>
+                                                        <input type="hidden" data-index="true" value=0>
+                                                    </div>
+                                                    <div class="cc-addon__name">
+                                                        <span class="cc-addon__qty">2500</span> Number of contacts
+                                                    </div>
+                                                </div>
+                                                <div class="cc-addon__caption">
+                                                    Limit of 5000
+                                                </div>
+                                            </div>
+                                            <div class="cc-addon__aside">
+                                              <!---  <div class="cc-addon__price">US$0.03<small>/mo</small></div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                
+                            </div>
+                        </div>
+
+                        <div class="cc-section">
+                            <div class="cc-section__header">
+                                <div class="cc-section__number">3</div>
+                                <div class="cc-section__title">Enter your payment info</div>
+                            </div>
+                            <div class="cc-section__content">
+                                <div class="cc-section__subtitle">Billing address</div>
+                                <div class="cc-section__fields">
+                                    <div class="cc-field">
+                                        <input type="text" class="cc-input" name="billing_address[line1]">
+                                      <label class="cc-label">Address</label>
+                                    </div>
+                                    
+                                    <div class="cc-field">
+                                        <select class="cc-input" name="billing_address[country]">
+                                            <option value="US">United States</option>
+                                            <option value="UK">United Kingdom</option>
+                                        </select>
+                                        <label class="cc-label">Country</label>
+                                    </div>
+                                    <div class="cc-field">
+                                        <input type="text" class="cc-input" name="billing_address[city]">
+                                        <label class="cc-label">City</label>
+                                    </div>
+                                    <div class="cc-field__row">
+                                        <div class="cc-field">
+                                            <input type="text" class="cc-input">
+                                            <label class="cc-label">State</label>
+                                        </div>
+                                        <div class="cc-field">
+                                            <input type="text" class="cc-input" name="billing_address[zip]">
+                                            <label class="cc-label">Zip Code</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="cc-section__subtitle">Payment information</div>
+                                <div class="cc-section__fields">
+                                    <div class="cc-field__row">
+                                        <div class="cc-field">
+                                            <input type="text" class="cc-input" name="customer[first_name]" id="firstName">
+                                            <label class="cc-label">First name</label>
+                                        </div>
+                                        <div class="cc-field">
+                                            <input type="text" class="cc-input" name="customer[last_name]" id="lastName">
+                                            <label class="cc-label">Last Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="cc-field">
+                                        <input type="text" class="cc-input" name="customer[email]" id="email">
+                                        <label class="cc-label">Email</label>
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="cc-section__subtitle">Payment method</div>
+                                <div class="cc-section__fields">
+                                    <div class="cc-section__payment">
+                                        <div class="cc-field">
+                                            <div id="card-number" class="cc-input"></div>
+                                            <label class="cc-label">Card Number</label>
+                                        </div>
+                                        <div class="cc-field__row">
+                                            <div class="cc-field">
+                                                <div id="card-expiry" class="cc-input"></div>
+                                                <label class="cc-label">Expiry</label>
+                                            </div>
+                                            <div class="cc-field">
+                                                <div id="card-cvv" class="cc-input"></div>
+                                                <label class="cc-label">CVV</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- components end -->
+
+                    </div>
+                    <div class="cc-aside">
+                        <div class="cc-summary" id="cc-orders">
+                            <div class="cc-field" style="display: none;">
+                                <select class="cc-input">
+                                    <option>USD</option>
+                                    <option>EUD</option>
+                                </select>
+                            </div>
+                            <div class="cc-cart">
+                             
+                                <div class="cc-cart__item">
+                                    <strong id="cc-cart-plan-name">Professional</strong>
+                                    <div class="cc-cart__label"><span></span></div>
+                                    <div class="cc-cart__value">$<span id="cc-cart-subtotal">0.00</span>/mo</div>
+                                </div>
+                                
+                                
+                                
+
+                                <hr>
+                                <div class="cc-cart__item">
+                                    <div class="cc-cart__label"><strong>Subtotal</strong></div>
+                                    <div class="cc-cart__value"><strong>$<span id="cc-cart-subtotal">0.00</span>/mo</strong></div>
+                                </div>
+                                
+
+                                <hr>
+                                <div class="cc-cart__footer">
+                                    <div class="cc-cart__total">You'll be charged<br> US$<span id="cc-cart-total"></span> today.</div>
+                                    <div class="cc-cart__statement">Please contact customer service at +1 (866) 800-0004 to adjust or cancel your plan. No refunds apply. By clicking below, you are agreeing to Cbee's <br><a href="https://www.chargebee.com" target="_blank">Privacy policy</a>.</div>
+                                    <button id="submit-button" type="submit" class="cc-cart__pay">Pay Now</button>
+                                    <div id="error" role="alert"></div>
+                                    <div id="token"></div>
+                                    <div class="cc-cart__terms">
+                                        <a href="https://www.chargebee.com" target="_blank" style="color: inherit;"><u>Terms of Use</u></a> and 
+                                        <a href="https://www.chargebee.com" target="_blank" style="color: inherit;"><u>Spam Policy</u></a>.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="cc-footer">
+        </div>
+    </div>
+    
+    <style>
+        /********************************************************
+         base styles
+        ********************************************************/
+        :root{
+            /* base variables */
+            --black-100: #e6e6e8;
+            --black-150: #cdcdd1;
+            --black-200: #b1b1ba;
+            --black-600: #7a7a87;
+            --black-1000: #222;
+            --black: #000;
+            --white: #fff;
+
+            --font-weight-300: 300;
+            --font-weight-400: 400;
+            --font-weight-500: 500;
+            --font-weight-700: 700;
+
+            --font-size-title: 30px;
+            --font-size-subtitle: 24px;
+            --font-size-heading: 20px;
+            --font-size-subheading: 18px;
+            --font-size-body: 16px;
+            --font-size-caption: 14px;
+            --font-size-subcaption: 12px;
+
+            --line-height-sm: 1.2;
+            --line-height-st: 1.4;
+            --line-height-lg: 1.6;
+
+            /* styling variables */
+            --brand-400: #36a635;
+
+            --info-400: #0040db;
+        }
+        body{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #fafafa;
+            color: var(--black-1000);
+            font-size: var(--font-size-body, 16px);
+            line-height: var(--line-height-st, 1.4);
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            outline: none;
+        }
+        *:before,
+        *:after{
+            box-sizing: border-box;
+        }
+        hr{
+            border: 0;
+            border-top: 1px solid var(--black-100);
+            margin: 12px 0;
+        }
+
+        /********************************************************
+         layout styles
+        ********************************************************/
+        .cc-content{
+            max-width: 1100px;
+            margin: auto;
+        }
+        .cc-container{
+            display: flex;
+        }
+        .cc-main{
+            flex: 1;
+        }
+        
+        @media (min-width: 800px) {
+            .cc-container{
+                padding: 0 16px;
+            }
+            .cc-aside{
+                width: 332px; /* width + spacing - 300 + 32 */
+                padding-left: 32px;
+            }
+        }
+        @media (max-width: 799px) {
+            .cc-container{
+                flex-direction: column;
+            }
+        }
+
+
+        /********************************************************
+         component styles
+        ********************************************************/
+        .cc-section{
+            width: 100%;
+            background-color: var(--white, #fff);
+            border: 1px solid var(--black-100, #e6e6e8);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .cc-section__header{
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .cc-section__number{
+            font-size: var(--font-size-body, 16px);
+            width: 28px;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 50%;
+            background: var(--black, #000);
+            color: var(--white, #fff);
+            margin-right: 8px;
+        }
+        .cc-section__title{
+            font-size: var(--font-size-subtitle, 24px);
+            font-weight: var(--font-weight-300,300);
+            line-height: var(--line-height-sm);
+        }
+        .cc-section__subtitle{
+            font-size: var(--font-size-subheading, 18px);
+            font-weight: var(--font-weight-300,300);
+            line-height: var(--line-height-sm);
+        }
+        .cc-section__heading{
+            font-size: var(--font-size-body, 16px);
+            font-weight: var(--font-weight-300,300);
+            line-height: var(--line-height-sm);
+        }
+        .cc-section__caption{
+            font-size: var(--font-size-caption, 14px);
+            font-weight: var(--font-weight-300,300);
+            margin-top: 4px;
+        }
+        .cc-section__block ~ .cc-section__block{
+            margin-top: 24px;
+        }
+        .cc-section__fields{
+            margin-top: 16px;
+        }
+        .cc-section__payment{
+            border-radius: 12px;
+            border: 1px solid var(--black-100, #e6e6e8);
+            background-color: #f0f0f0;
+            padding: 24px 16px 0;
+        }
+        @media (min-width: 800px) {
+            .cc-section{
+                border-radius: 12px;
+            }
+            .cc-section__fields{
+                max-width: 480px;
+            }
+        }
+
+        .cc-plan{
+            display: block;
+        }
+        .cc-plan ~ .cc-plan{
+            margin-top: 16px;
+        }
+        .cc-plan__container{
+            display: flex;
+            cursor: pointer;
+            padding: 16px;
+            border: 2px solid var(--black-100, #e6e6e8);
+            border-radius: 12px;
+            -webkit-transition: border-color 0.2s ease;
+            transition: border-color 0.2s ease;
+        }
+        .cc-plan__container:hover{
+            border-color: var(--black-200, #b1b1ba);
+        }
+        .cc-plan__main{
+            flex: 1;
+        }
+        .cc-plan__aside{
+            padding-left: 16px;
+            text-align: right;
+        }
+        .cc-plan__name{
+            font-size: var(--font-size-heading, 20px);
+            font-size: var(--font-size-heading, 20px);
+            font-weight: var(--font-weight-500, 500);
+            line-height: var(--line-height-sm);
+        }
+        .cc-plan__caption,
+        .cc-plan__includes{
+            font-size: var(--font-size-caption, 14px);
+            font-weight: var(--font-weight-400, 400);
+            max-width: 320px;
+            margin-top: 8px;
+        }
+        .cc-plan__includes{
+            font-weight: var(--font-weight-500, 500);
+        }
+        .cc-plan__offer{
+            font-size: var(--font-size-body, 16px);
+            font-weight: var(--font-weight-500, 500);
+            color: var(--brand-400);
+            margin-bottom: 4px;
+        }
+        .cc-plan__value{
+            font-size: var(--font-size-title, 30px);
+            line-height: var(--line-height-sm);
+            font-weight: var(--font-weight-700, 700);
+        }
+        .cc-plan__value small{
+            font-weight: var(--font-weight-400, 400);
+        }
+        .cc-plan__promo{
+            font-size: var(--font-size-caption, 14px);
+            margin-top: 4px;
+        }
+        .cc-plan__input:checked,
+        .cc-plan__input:not(:checked) {
+            position: absolute;
+            left: -9999px;
+        }
+        .cc-plan__input:checked + .cc-plan__container .cc-plan__icon,
+        .cc-plan__input:not(:checked) + .cc-plan__container .cc-plan__icon {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+            display: inline-block;
+            color: var(--black-200, #b1b1ba);
+        }
+        .cc-plan__input:checked + .cc-plan__container .cc-plan__icon:before,
+        .cc-plan__input:not(:checked) + .cc-plan__container .cc-plan__icon:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--black-200, #b1b1ba);
+            border-radius: 100%;
+            background: var(--white,#fff);
+        }
+        .cc-plan__input:checked + .cc-plan__container .cc-plan__icon:after,
+        .cc-plan__input:not(:checked) + .cc-plan__container .cc-plan__icon:after {
+            content: '';
+            width: 60%;
+            height: 60%;
+            background: var(--brand-400, #36a635);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border-radius: 100%;
+            -webkit-transition: all 0.2s ease;
+            transition: all 0.2s ease;
+        }
+        .cc-plan__input:not(:checked) + .cc-plan__container .cc-plan__icon:after {
+            opacity: 0;
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+        .cc-plan__input:checked + .cc-plan__container .cc-plan__icon:after {
+            opacity: 1;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+        }
+        .cc-plan__input:checked + .cc-plan__container .cc-plan__icon:before,
+        .cc-plan__input:checked + .cc-plan__container{
+            border-color: var(--brand-400, #36a635);
+        }
+
+        * + .cc-addon{
+            margin-top: 16px;
+        }
+        .cc-addon__container{
+            display: flex;
+            padding: 16px;
+            border: 2px solid var(--black-100, #e6e6e8);
+            border-radius: 12px;
+            -webkit-transition: border-color 0.2s ease;
+            transition: border-color 0.2s ease;
+        }
+        .cc-addon__main{
+            flex: 1;
+        }
+        .cc-addon__aside{
+            padding-left: 16px;
+        }
+        .cc-addon__row{
+            display: flex;
+        }
+        .cc-addon__counter{
+            display: flex;
+        }
+        .cc-addon__counter-decrement,
+        .cc-addon__counter-increment{
+            width: 24px;
+            min-width: 24px;
+            height: 24px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            border: 2px solid var(--black-200, #b1b1ba);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .cc-addon__counter-input{
+            -moz-appearance: textfield;
+            display: none;
+        }
+        .cc-addon__name{
+            font-size: var(--font-size-heading, 20px);
+            font-size: var(--font-size-heading, 20px);
+            font-weight: var(--font-weight-500, 500);
+            line-height: var(--line-height-sm);
+        }
+        .cc-addon__caption{
+            font-size: var(--font-size-caption, 14px);
+            font-weight: var(--font-weight-400, 400);
+            max-width: 320px;
+            margin-top: 8px;
+        }
+        .cc-addon__price{
+            font-size: var(--font-size-subtitle, 24px);
+            line-height: var(--line-height-sm);
+            font-weight: var(--font-weight-700, 700);
+        }
+        .cc-addon__price small{
+            font-weight: var(--font-weight-400, 400);
+        }
+
+        .cc-field{
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .cc-field__row{
+            display: flex;
+            margin-left: -12px;
+        }
+        .cc-field__row .cc-field{
+            flex: 1;
+            margin-left: 12px;
+        }
+        .cc-label {
+            position: absolute;
+            top: 8px;
+            left: 16px;
+            pointer-events: none;
+            z-index: 1;
+            color: var(--black-200);
+            font-size: 16px;
+            font-weight: normal;
+            -webkit-transition: all 0.28s ease;
+            transition: all 0.28s ease;
+            padding: 2px;
+        }
+        .cc-label:before {
+            content: '';
+            width: 101%;
+            height: 3px;
+            background: var(--white);
+            display: block;
+            position: absolute;
+            top: 11px;
+            left: -1px;
+            z-index: -1;
+        }
+        .cc-label:after {
+            content: '*';
+            color: lightcoral;
+        }
+        .cc-input{
+            height: 40px;
+            display: block;
+            background: var(--white);
+            padding: 8px 16px;
+            font-size: var(--font-size-body);
+            border: 1px solid var(--black-150);
+            line-height: var(--line-height-st);
+            width: 100%;
+            -webkit-transition: all 0.28s ease;
+            transition: all 0.28s ease;
+            box-shadow: none;
+            border-radius: 8px;
+        }
+        .cc-input:focus,
+        .cc-input.focus{
+            border-color: var(--info-400);
+        }
+        .cc-input:focus ~ .cc-label,
+        .cc-input.focus ~ .cc-label{
+            color: var(--info-400);
+        }
+        .cc-input:focus ~ .cc-label,
+        .cc-input.focus ~ .cc-label,
+        .cc-input.val ~ .cc-label,
+        .cc-input.invalid ~ .cc-label,
+        .cc-input.complete ~ .cc-label,
+        select.cc-input:valid ~ .cc-label{
+            font-size: var(--font-size-caption);
+            top: -12px;
+        }        
+        .cc-input.invalid ~ .cc-label{
+            color: lightcoral;
+        }
+        #error{
+            color: lightcoral;
+            margin-top: 12px;
+            font-size: var(--font-size-subcaption);
+        }
+        textarea.cc-input {
+            resize: none;
+            height: auto;
+        }
+
+        .cc-summary{
+            background-color: var(--white);
+            font-size: var(--font-size-caption);
+            padding: 16px;
+            margin-bottom: 24px;
+            position: sticky;
+            top: 16px;
+            border: 1px solid var(--black-100, #e6e6e8);
+        }
+        @media (min-width: 800px) {
+            .cc-summary{
+                border: none;
+                box-shadow: 0 3px 3px -2px rgba(0,0,0,.2), 0 3px 4px 0 rgba(0,0,0,.14), 0 1px 8px 0 rgba(0,0,0,.12);
+                border-radius: 12px;
+            }
+        }
+
+        .cc-cart__item{
+            display: flex;
+        }
+        .cc-cart__label{
+            flex: 1;
+            padding-right: 4px;
+            padding-bottom: 8px;
+        }
+        .cc-cart__footer{
+            text-align: center;
+        }
+        .cc-cart__total{
+            font-size: var(--font-size-subheading);
+            font-weight: var(--font-weight-500);
+            margin-top: 24px;
+        }
+        .cc-cart__statement{
+            font-size: var(--font-size-subcaption);
+            margin-top: 24px;
+        }
+        .cc-cart__pay{
+            border: 0;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: var(--info-400);
+            color: var(--white);
+            font-size: var(--font-size-caption);
+            font-weight: var(--font-weight-400);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+        .cc-cart__pay:disabled{
+            background: var(--black-100);
+            color: var(--black-200);
+        }
+        .cc-cart__terms{
+            color: var(--black-600);
+            margin-top: 16px;
+        }
+    </style>
+ <script>
+    $(document).ready(function(){
+        $(".cc-input").on("focus", function () {
+            $(this).addClass("focus");
+        });
+
+        $(".cc-input").on("blur", function () {
+            $(this).removeClass("focus");
+        });
+
+        $(".cc-input").on("keyup", function () {
+            if ($(this).val()) {
+                $(this).removeClass("empty");
+                $(this).addClass("val");
+            }
+            else {
+                $(this).addClass("empty");
+                $(this).removeClass("val");
+            }
+        });
+
+        // default plan checked on load
+        //$(".cc-plan__input").first().attr('checked', true);
+
+        // plan name and price update in summary
+       $('.cc-plan').each(function(){
+
+            $(this).click(function(){
+                var name = $(this).find('.cc-plan__name').text();
+                $('#cc-cart-plan-name').text(name);
+                $('.cc-plans').data("PlanIndex",$(this).index());
+
+                subtotal();
+            })
+        })
+
+        //addon counter
+        $('.cc-addon__counter').each(function() {
+            var counter = $(this),
+                input = counter.find('.cc-addon__counter-input'),
+                increment = counter.find('.cc-addon__counter-increment'),
+                decrement = counter.find('.cc-addon__counter-decrement'),
+                min = input.attr('min'),
+                max = input.attr('max');
+
+            var orders = $('#cc-orders');
+
+            increment.click(function() {
+                var oldValue = parseFloat(input.val());
+                if (oldValue >= max) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue + 2500;
+                } 
+                counter.find('.cc-addon__counter-input').val(newVal);
+                counter.find('[name*="addons[quantity]"]').val(newVal);
+                counter.parents('.cc-addon__row').find('.cc-addon__qty').text(newVal);
+                counter.find('.cc-addon__counter-input').trigger("change");
+
+                $('.cc-plans > label:nth-child(1)').find('.cc-plan__price').text(newVal == 2500 ? 27.50 : 49.50);
+                $('.cc-plans > label:nth-child(2)').find('.cc-plan__price').text(newVal == 2500 ? 62.50 : 84.50);
+                $('.cc-plans > label:nth-child(3)').find('.cc-plan__price').text(newVal == 2500 ? 79.50 : 119.50);               
+                subtotal();
+            });
+
+            decrement.click(function() {
+                var oldValue = parseFloat(input.val());
+                if (oldValue <= min) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue - 2500;
+                }
+                counter.find(".cc-addon__counter-input").val(newVal);
+                counter.find('[name*="addons[quantity]"]').val(newVal);
+                counter.parents('.cc-addon__row').find(".cc-addon__qty").text(newVal);
+                counter.find(".cc-addon__counter-input").trigger("change");
+
+                $('.cc-plans > label:nth-child(1)').find('.cc-plan__price').text(newVal == 2500 ? 27.50 : 49.50);
+                $('.cc-plans > label:nth-child(2)').find('.cc-plan__price').text(newVal == 2500 ? 62.50 : 84.50);
+                $('.cc-plans > label:nth-child(3)').find('.cc-plan__price').text(newVal == 2500 ? 79.50 : 119.50);
+               
+
+                subtotal();
+            });
+
+        });
+
+        //cart subtotal
+        function subtotal() {
+            var plan = $('.cc-plans').data("PlanIndex") + 1;
+            var quantity = $('.cc-addon__qty').text();
+            var price = $('.cc-plans > label:nth-child(' + plan + ')').find('.cc-plan__price').text();
+            $('#cc-cart-subtotal, #cc-cart-total').text(price);
+        }
+        subtotal();  
+    });
+</script>
+
+</body>
+</html>

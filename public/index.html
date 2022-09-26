@@ -1,60 +1,108 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- adding the needed styling -->
+  <meta charset="UTF-8">
   <title>Checkout Demo</title>
-  <link href="/assets/css/style.css" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script src="https://js.chargebee.com/v2/chargebee.js"></script>
-
 </head>
 
-<script> 
-  $(document).ready(function() {
-    var cbInstance = window.Chargebee.init({site: "renesf-test"});
-    var url = window.location.href
-    var arr = url.split("/");
-    var domain = arr[0] + "//" + arr[2];
-    
-    $("#cva").on("click", function(event) {
-      
-            window.location.replace(domain + "/index1.html");
-          }
-    );
-    $("#dis").on("click", function(event) {
-      
-      window.location.replace(domain + "/index2.html");
-    }
-);
-$("#hc").on("click", function(event) {
-      
-      window.location.replace(domain + "/index3.html");
-    }
-);
-$("#cbjs").on("click", function(event) {
-      
-      window.location.replace(domain + "/index4.html");
-    }
-);
-        });
-  </script>
+
+
+
+
 
 
 <body>
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
+<!-- partial:index.partial.html -->
+<div class="container">
+  <div class="py-5 text-center">
+    
+    <h2>Chargebee Checkout Experience</h2>
+  </div>
 
-<main>
-<section class="card">
-<h1>Checkout Demo</h1>
+  <div class="row">
+    <div class="col-md-4 order-md-2 mb-4" style="margin: 0 auto;">
+     <!-- <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Your cart</span>
+        <span class="badge badge-secondary badge-pill">3</span>
+      </h4> -->
+      <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Drop-in Script</h6>
+           <small class="text-muted">presalesdropin-test.chargebee.com</small>
+          </div>
+          <a href="https://cbcheckoutapp.herokuapp.com/dis.html"> <span class="text-muted">Link</span> </a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Checkout via API</h6>
+            <small class="text-muted">checkoutexamples-test.chargebee.com</small>
+          </div>
+          <a href="https://cbcheckoutapp.herokuapp.com/cva.html"> <span class="text-muted">Link</span> </a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Hybrid Checkout</h6>
+            <small class="text-muted">presaleshybridcheckout-test</small>
+          </div>
+          <a href="https://cbcheckoutapp.herokuapp.com/hc.html"> <span class="text-muted">Link</span> </a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Chargebee.js</h6>
+            <small class="text-muted">checkoutexamples-test.chargebee.com</small>
+          </div>
+          <a href="https://cbcheckoutapp.herokuapp.com/cbjs.html"> <span class="text-muted">Link</span> </a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">3DS via Stripe</h6>
+            <small class="text-muted">checkoutexamples-test.chargebee.com</small>
+          </div>
+          <a href="https://cbcheckoutapp.herokuapp.com/3dsjs.html"> <span class="text-muted">Link</span> </a>
+        </li>
+   <!--     <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Ecommerce Checkout</h6>
+            <small class="text-muted">checkoutexamples-test.chargebee.com</small>
+          </div>
+          <a href="https://cbcheckoutapp.herokuapp.com/dis.html"> <span class="text-muted">Link</span> </a>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">Full Page Checkout</h6>
+            <small class="text-muted">presalessinglepagecheckout-test</small>
+          </div>
+          <a href="https://cbcheckoutapp.herokuapp.com/dis.html"> <span class="text-muted">Link</span> </a>
+        </li> -->
+        <!--<li class="list-group-item d-flex justify-content-between">
+          <span>Total (USD)</span>
+          <strong>$20</strong>
+        </li>-->
+      </ul>
 
-  <h2 id="dis">Drop-in Script</h2>
-  <h2 id="cva">Checkout via API</h2>
-  <h2 id="hc">Hybrid Checkout</h2>
-  <h2 id="cbjs">Chargebee.js</h2>
-  </section>
+      
+    </div>
+    
+  </div>
+        
+       
 
+        
+
+  <footer class="my-5 pt-5 text-muted text-center text-small">
+    <p class="mb-1">&copy; 2017-2021 Chargebee Presales</p>
+   <!-- <ul class="list-inline">
+      <li class="list-inline-item"><a href="#">Privacy</a></li>
+      <li class="list-inline-item"><a href="#">Terms</a></li>
+      <li class="list-inline-item"><a href="#">Support</a></li>
+    </ul> 
+  </footer>-->
+</div>
+
+  
 </body>
 </html>
