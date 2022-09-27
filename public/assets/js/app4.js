@@ -1,15 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-  $("input").on("focus", function() {
+  $("input").on("focus", function () {
     $(this).addClass("focus");
   });
 
-  $("input").on("blur", function() {
+  $("input").on("blur", function () {
     $(this).removeClass("focus");
   });
 
-  $("input").on("keyup", function() {
-    if($(this).val()) {
+  $("input").on("keyup", function () {
+    if ($(this).val()) {
       $(this).removeClass("empty");
       $(this).addClass("val");
     }
@@ -98,17 +98,17 @@ $(document).ready(function() {
 
     // Mount card component
     cardComponent.mount();
-    
-    $("#subscribe-form").on("submit", function(event) {
-      var cbInstance = window.Chargebee.init({site: "checkoutexamples-test"});
+
+    $("#subscribe-form").on("submit", function (event) {
+      var cbInstance = window.Chargebee.init({ site: "checkoutexamples-test" });
       var url = window.location.href
       var arr = url.split("/");
       var domain = arr[0] + "//" + arr[2];
 
-     // $("#submit-button").addClass("submit");
+      // $("#submit-button").addClass("submit");
       event.preventDefault();
       cardComponent.tokenize().then(data => {
-       // $("#submit-button").removeClass("submit");
+        // $("#submit-button").removeClass("submit");
         $("#token").show();
         $("#error").hide();
         $("#token").html("Token " + data.token + " successfully created!!");
@@ -122,16 +122,16 @@ $(document).ready(function() {
 
 
         $.ajax(
-        {
-          url: domain + "/api/create_customer",
-          type: 'POST',
-          dataType: 'json',
-          data: {"customer_name": customer_name, "email": email, "token":token, "lastName" : lastName, "company":company},
-          success: function(result){
-            console.log("successfull",result);
+          {
+            url: domain + "/api/create_customer",
+            type: 'POST',
+            dataType: 'json',
+            data: { "customer_name": customer_name, "email": email, "token": token, "lastName": lastName, "company": company },
+            success: function (result) {
+              console.log("successfull", result);
               //$("#div1").html(result);
-       }
-      }); 
+            }
+          });
       }).catch(error => {
         $("#submit-button").removeClass("submit");
         // TODO get a proper error message
@@ -141,9 +141,9 @@ $(document).ready(function() {
         console.log(error);
       });
 
-      
 
-     
+
+
     });
   });
 });

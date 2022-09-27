@@ -1,6 +1,7 @@
-body{
+body {
   margin: 0;
 }
+
 main {
   background-color: #d7e3fa;
   height: 100vh;
@@ -16,7 +17,7 @@ main {
   padding: 35px;
   border-radius: 25px;
   text-align: center;
- 
+
 }
 
 
@@ -32,7 +33,7 @@ h1 {
 h2 {
   color: #5e636b;
   font-size: 20px;
-  font-family: "Raleway", sans-serif; 
+  font-family: "Raleway", sans-serif;
 }
 
 h2:hover {
