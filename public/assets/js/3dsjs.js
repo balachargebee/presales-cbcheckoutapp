@@ -1,15 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-  $("input").on("focus", function() {
+  $("input").on("focus", function () {
     $(this).addClass("focus");
   });
 
-  $("input").on("blur", function() {
+  $("input").on("blur", function () {
     $(this).removeClass("focus");
   });
 
-  $("input").on("keyup", function() {
-    if($(this).val()) {
+  $("input").on("keyup", function () {
+    if ($(this).val()) {
       $(this).removeClass("empty");
       $(this).addClass("val");
     }
@@ -104,83 +104,83 @@ $(document).ready(function() {
 
     // Mount card component
     cardComponent.mount();
-    
-    $("#subscribe-form").on("submit", function(event) {
-        console.log("Success");
-        var cbInstance = window.Chargebee.init({site: "checkoutexamples-test"});
-        var url = window.location.href;
-        var arr = url.split("/");
-        var domain = arr[0] + "//" + arr[2];
-    $("#submit-button").addClass("submit");
+
+    $("#subscribe-form").on("submit", function (event) {
+      console.log("Success");
+      var cbInstance = window.Chargebee.init({ site: "checkoutexamples-test" });
+      var url = window.location.href;
+      var arr = url.split("/");
+      var domain = arr[0] + "//" + arr[2];
+      $("#submit-button").addClass("submit");
       event.preventDefault();
 
-    var additionalData = {
-       plan : "",
-       billingAddress : {
-        firstName : "Anna",
-        lastName : "T",
-        addressLine1 : "Sengthal",
-        addressLine2 : "test",
-        city : "Schwand im Innkreis",
-        state : "Oberösterreich",
-        countryCode : "AT",
-        zip : "5134"
-       },
-       customerBillingAddress : {
-        firstName : "Anna",
-        lastName : "T",
-        addressLine1 : "Sengthal",
-        addressLine2 : "test",
-        city : "Schwand im Innkreis",
-        state : "Oberösterreich",
-        countryCode : "AT",
-        zip : "5134"
-       },
-    };
+      var additionalData = {
+        plan: "",
+        billingAddress: {
+          firstName: "Anna",
+          lastName: "T",
+          addressLine1: "Sengthal",
+          addressLine2: "test",
+          city: "Schwand im Innkreis",
+          state: "Oberösterreich",
+          countryCode: "AT",
+          zip: "5134"
+        },
+        customerBillingAddress: {
+          firstName: "Anna",
+          lastName: "T",
+          addressLine1: "Sengthal",
+          addressLine2: "test",
+          city: "Schwand im Innkreis",
+          state: "Oberösterreich",
+          countryCode: "AT",
+          zip: "5134"
+        },
+      };
 
-    var callbacks = {
+      var callbacks = {
 
-    };
+      };
 
       $.ajax(
         {
-          url:  domain + "/api/create_payment_intent", 
+          url: domain + "/api/create_payment_intent",
           type: 'POST',
           dataType: 'json',
-          data: {"amount": "5000", "currency_code": "USD", "gateway_account_id": "gw_16CKeZSq8GuvIHNR"},
-          success: function(result){
-              console.log("successfull",result);
-              console.log("Helloo");
-              $("#submit-button").removeClass("submit");
+          data: { "amount": "5000", "currency_code": "USD", "gateway_account_id": "gw_16CKeZSq8GuvIHNR" },
+          success: function (result) {
+            console.log("successfull", result);
+            console.log("Helloo");
+            $("#submit-button").removeClass("submit");
 
-              cardComponent.authorizeWith3ds(result, additionalData, callbacks).then(paymentIntent => {
+            cardComponent.authorizeWith3ds(result, additionalData, callbacks).then(paymentIntent => {
 
-             $.ajax(
-              {
-                url: domain + "/api/create_customer_3ds", 
-                type: 'POST',
-                dataType: 'json',
-                data: {"customer_name": "Anna", "email": "anna@test.com", "payment_intent":paymentIntent.id, "gateway_account_id" : "gw_16CKeZSq8GuvIHNR"},
-                success: function(result){
-                console.log("successfull",result);
-                $("#token").html("successfull");
+              $.ajax(
+                {
+                  url: domain + "/api/create_customer_3ds",
+                  type: 'POST',
+                  dataType: 'json',
+                  data: { "customer_name": "Anna", "email": "anna@test.com", "payment_intent": paymentIntent.id, "gateway_account_id": "gw_16CKeZSq8GuvIHNR" },
+                  success: function (result) {
+                    console.log("successfull", result);
+                    $("#token").html("successfull");
 
-                      
 
-                //$("#submit-button").removeClass("submit");
-              }
-              }); 
 
-              
+                    //$("#submit-button").removeClass("submit");
+                  }
+                });
 
-          });
 
-              $("#div1").html(result);
-              return;
-       }
-      }); 
 
-     
+            });
+
+            $("#div1").html(result);
+            return;
+          }
+        });
+
+
     });//payment submit
 
   });
